@@ -4,6 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDeliveryService } from '../lib/delivery-service';
 import type { Entrega, Entregador } from '../lib/delivery-service';
 import StoreDirectory from './StoreDirectory';
+import MotoboyScreen from './MotoboyScreen';
 
 interface DeliveryDashboardProps {
   client: SupabaseClient;
@@ -36,6 +37,16 @@ function formatDate(value: string) {
 }
 
 export default function DeliveryDashboard({ client }: DeliveryDashboardProps) {
+  const [showMotoboy, setShowMotoboy] = useState(false);
+
+  if (showMotoboy) {
+    return <MotoboyScreen onBack={() => setShowMotoboy(false)} />;
+  }
+
+  return <DeliveryCentral client={client} onOpenMotoboy={() => setShowMotoboy(true)} />;
+}
+
+function DeliveryCentral({ client, onOpenMotoboy }: DeliveryDashboardProps & { onOpenMotoboy: () => void }) {
   const service = useMemo(() => createDeliveryService(client), [client]);
   const [entregadores, setEntregadores] = useState<Entregador[]>([]);
   const [entregas, setEntregas] = useState<Entrega[]>([]);
@@ -156,9 +167,14 @@ export default function DeliveryDashboard({ client }: DeliveryDashboardProps) {
             <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Central de entregas</h1>
             <p className="mt-2 text-sm text-muted-foreground">Organize os pedidos e conecte cada entrega ao seu entregador.</p>
           </div>
-          <button type="button" className={buttonClass} disabled={loading || saving} onClick={() => { setNotice(''); void carregar(); }}>
-            {loading ? 'Carregando…' : 'Atualizar dados'}
-          </button>
+          <div className="flex flex-wrap gap-3">
+            <button type="button" onClick={onOpenMotoboy} disabled={saving} className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50">
+              Área do motoboy
+            </button>
+            <button type="button" className={buttonClass} disabled={loading || saving} onClick={() => { setNotice(''); void carregar(); }}>
+              {loading ? 'Carregando…' : 'Atualizar dados'}
+            </button>
+          </div>
         </header>
 
         {error && <div role="alert" className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">{error}</div>}
