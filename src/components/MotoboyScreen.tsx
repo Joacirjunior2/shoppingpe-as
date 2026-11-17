@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import MotoboyDailyEarnings from './MotoboyDailyEarnings';
 
 interface MotoboyScreenProps {
   onBack?: () => void;
@@ -50,6 +51,8 @@ export default function MotoboyScreen({ onBack }: MotoboyScreenProps) {
           </div>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">Esta tela ainda não está conectada às suas entregas. Nenhum pedido está sendo recebido ou atualizado por aqui.</p>
         </section>
+
+        <MotoboyDailyEarnings />
 
         <section aria-label="Resumo das entregas" className="grid grid-cols-3 gap-2 sm:gap-4">
           {tabs.map(tab => (
