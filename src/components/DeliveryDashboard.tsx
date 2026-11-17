@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDeliveryService } from '../lib/delivery-service';
 import type { Entrega, Entregador } from '../lib/delivery-service';
+import StoreDirectory from './StoreDirectory';
 
 interface DeliveryDashboardProps {
   client: SupabaseClient;
@@ -162,6 +163,8 @@ export default function DeliveryDashboard({ client }: DeliveryDashboardProps) {
 
         {error && <div role="alert" className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">{error}</div>}
         {notice && <div role="status" className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm text-foreground">{notice}</div>}
+
+        <StoreDirectory client={client} />
 
         <section aria-label="Resumo das operações" className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {[
